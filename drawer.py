@@ -1,13 +1,9 @@
 __author__ = 'tommaso'
 
-import plotly
 import plotly.plotly as py
 import plotly.graph_objs as go
 import pandas as pd
 import os
-
-
-plotly.tools.set_credentials_file(username='totomz', api_key='uk5clj1ogp')
 
 
 def main():
