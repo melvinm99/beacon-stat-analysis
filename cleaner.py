@@ -20,7 +20,6 @@ def main( method, method_value, additional, additional_value , sideLen):
     for csv in [f for f in os.listdir('./') if f.endswith("csv") and f == data]:
         df = pd.read_csv(csv, header=0, decimal='.')
         header = df.columns.values
-        print df
         for row in df.itertuples():
             nomeCella=row[1]
             for i in range(2, len(row)):
@@ -41,7 +40,7 @@ def main( method, method_value, additional, additional_value , sideLen):
         for row in df.itertuples():  # itera per tuple il csv
                 for i in range(1, len(row)):  # itera su ogni tupla cercando valori di default da rimpiazzare (es. -1000)
                     if i % 2 != 0 and row[i] == defaultValue:   #statistiche solo su distance
-                        df.ix[row[0], i - 1] = percentili[i]
+                        df.ix[row[0], i - 1] = percentili[row[1],(header[i-1][9:])]
         #print percentili
         statistica = percentili
 
@@ -151,7 +150,7 @@ def main( method, method_value, additional, additional_value , sideLen):
 
 
 if __name__ == "__main__":
-        main("truncated_mean", 0.2, "", "", 3)
+        main("truncated_mean", 0.2, "replace", 20, 3)
 
 #EXAMPLES
 #percentile 80
