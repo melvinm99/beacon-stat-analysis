@@ -1,0 +1,12 @@
+incontro con alessandro
+--------------------------------------------------
+misurare l'intensità del segnale a varie distanze, ottenere distribuzione di distanze, capire se è direzionato 
+heatmap dell'errore in funzione del raggio e della distanza
+
+
+come normalizzare rispetto a una gaussiana , skewness = mom. di ordine 3, kurtosis = mom. di ordine 4. Con questi valori, mi avvicino a 1, ossia è una gaussiana?
+trovare fit intensità in funzione della distanza e controllare riscontro con i dati per la varianza, se coincide. Se è una gaussiana non filtriamo i dati, sennò so cazzi.
+
+0) capire se sono isotropi
+1) grafico intensità/distanza
+2) 

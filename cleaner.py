@@ -6,7 +6,7 @@ import numpy
 import plotly.plotly as py
 import plotly.graph_objs as go
 
-beaconIDs = "cQsW", "kpOU","94gJ","Cvj5","cGTg", "At5a"
+beaconIDs = "cQsW", "94gJ","Cvj5","cGTg", "At5a", "kpOU"
 data = "data_raw.csv"
 outputFile = "result.csv"
 defaultValue=-1000.0
@@ -39,7 +39,7 @@ def main( method, method_value, additional, additional_value , sideLen):
             percentili[key] = stats.scoreatpercentile(distanze[key], method_value)
         for row in df.itertuples():  # itera per tuple il csv
                 for i in range(1, len(row)):  # itera su ogni tupla cercando valori di default da rimpiazzare (es. -1000)
-                    if i % 2 != 0 and row[i] == defaultValue:   #statistiche solo su distance
+                    if i % 2 != 0 and row[i] == defaultValue and header[i-1][9:]!="kpOU":   #statistiche solo su distance
                         df.ix[row[0], i - 1] = percentili[row[1],(header[i-1][9:])]
         #print percentili
         statistica = percentili
@@ -51,7 +51,7 @@ def main( method, method_value, additional, additional_value , sideLen):
             truncatedMeans[key] = stats.trim_mean(distanze[key], method_value)
         for row in df.itertuples():  # itera per tuple il csv
             for i in range(2, len(row)):  # itera su ogni tupla cercando valori di default da rimpiazzare (es. -1000)
-                if i % 2 != 0 and row[i] == defaultValue:
+                if i % 2 != 0 and row[i] == defaultValue and header[i-1][9:]!="kpOU":
                     df.ix[row[0], i - 1] = truncatedMeans[row[1],(header[i-1][9:])]
         #print truncatedMeans
         statistica = truncatedMeans
@@ -88,8 +88,8 @@ def main( method, method_value, additional, additional_value , sideLen):
             percentiliDOWN[key] = stats.scoreatpercentile(distanze[key], additional_value/2 ) #percentile per ogni ID
         for row in df.itertuples():  # itera per tuple il csv
             for i in range(2, len(row)):  # itera su ogni tupla cercando gli 0, i= indice colonna
-                if i % 2 != 0 :
-                    if row[i] < percentiliDOWN[row[1],(header[i-1][9:])] or row[i] > percentiliDOWN[row[1],(header[i-1][9:])]:
+                if i % 2 != 0 and header[i-1][9:]!="kpOU":
+                    if row[i] < percentiliDOWN[row[1],(header[i-1][9:])] or row[i] > percentiliUP[row[1],(header[i-1][9:])] :
                         #print row[i], percentiliDOWN[i], row[i], percentiliUP[i], additional_value
                         df.ix[row[0], i - 1] = statistica[row[1],(header[i-1][9:])]
                         count += 1
@@ -130,19 +130,19 @@ def main( method, method_value, additional, additional_value , sideLen):
             dataheat = [go.Heatmap( x=df['riga'],
                                     y=df['colonna'],
                                     z=df[col].tolist(),
-                                        reversescale=False)]
+                                        reversescale=True)]
             layout = go.Layout(title=method + "_" + col, width=800, height=640)
             fig = go.Figure(data=dataheat, layout=layout)
-            py.image.save_as(fig, filename = "new_images/" + method + "_" + col + "-heatmap.png")
+            py.image.save_as(fig, filename = "new_images/" + method + str(method_value) + "-" + additional + str(additional_value) + "_" + col + "-heatmap.png")
 
             #contour
-            dataheat = [go.Contour(x=df['riga'],
-                                   y=df['colonna'],
-                                   z=df[col].tolist(),
-                                   reversescale=False)]
-            layout = go.Layout(title=method + "_" + col, width=800, height=640)
-            fig = go.Figure(data=dataheat, layout=layout)
-            py.image.save_as(fig, filename="new_images/" + method + "_" + col + "-contour.png")
+            # dataheat = [go.Contour(x=df['riga'],
+            #                        y=df['colonna'],
+            #                        z=df[col].tolist(),
+            #                        reversescale=False)]
+            # layout = go.Layout(title=method + "_" + col, width=800, height=640)
+            # fig = go.Figure(data=dataheat, layout=layout)
+            # py.image.save_as(fig, filename="new_images/" + method + "_" + col + "-contour.png")
 
 
     #py.plot(dataheat, filename='labelled-heatmap.png')   online!
@@ -150,7 +150,7 @@ def main( method, method_value, additional, additional_value , sideLen):
 
 
 if __name__ == "__main__":
-        main("truncated_mean", 0.2, "replace", 20, 3)
+        main("truncated_mean", 0.3, "replace", 20, 3)
 
 #EXAMPLES
 #percentile 80
